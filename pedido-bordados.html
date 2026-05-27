@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ateliê de Bordados — Ficha de Pedido</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF6F0;
+    --parchment: #F0E8DA;
+    --blush: #D4A0A0;
+    --rose: #B07070;
+    --gold: #C8A96E;
+    --gold-light: #E8D5A8;
+    --deep: #2C1A1A;
+    --muted: #7A5F5F;
+    --border: #DDD0C0;
+    --white: #FFFFFF;
+    --shadow: rgba(44,26,26,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--deep);
+    min-height: 100vh;
+    background-image: 
+      radial-gradient(ellipse at 20% 20%, rgba(200,169,110,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(212,160,160,0.10) 0%, transparent 60%);
+  }
+
+  .page-wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .header::before, .header::after {
+    content: '✦';
+    position: absolute;
+    bottom: -10px;
+    font-size: 12px;
+    color: var(--gold);
+  }
+  .header::before { left: calc(50% - 60px); }
+  .header::after  { left: calc(50% + 48px); }
+  .header-ornament {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: var(--deep);
+    line-height: 1.1;
+  }
+  .header h1 em {
+    font-style: italic;
+    color: var(--rose);
+  }
+  .header-sub {
+    margin-top: 10px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ─── SECTION CARD ─── */
+  .section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 32px 36px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 20px var(--shadow);
+    position: relative;
+    transition: box-shadow 0.3s ease;
+  }
+  .section:hover { box-shadow: 0 4px 32px rgba(44,26,26,0.12); }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .section-label .num {
+    width: 28px; height: 28px;
+    background: var(--deep);
+    color: var(--gold-light);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-label h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--deep);
+  }
+  .section-label h2 span {
+    display: block;
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  /* ─── FIELDS ─── */
+  .field-grid {
+    display: grid;
+    gap: 16px;
+  }
+  .field-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .field-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .field label .req { color: var(--rose); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="email"],
+  input[type="tel"],
+  select,
+  textarea {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 10px 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--deep);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    background: var(--white);
+  }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A5F5F' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+  /* ─── RADIO / CHECKBOX GROUPS ─── */
+  .option-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 2px;
+  }
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--deep);
+    background: var(--cream);
+    transition: all 0.18s ease;
+    user-select: none;
+  }
+  .opt-btn:hover { border-color: var(--gold); background: var(--gold-light); }
+  .opt-btn input { display: none; }
+  .opt-btn.selected {
+    background: var(--deep);
+    border-color: var(--deep);
+    color: var(--gold-light);
+  }
+  .opt-btn .dot {
+    width: 7px; height: 7px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background 0.18s;
+  }
+  .opt-btn.selected .dot { background: var(--gold-light); }
+
+  /* ─── COLOR PICKER SWATCHES ─── */
+  .color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .swatch {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
+    position: relative;
+  }
+  .swatch:hover { transform: scale(1.15); }
+  .swatch.active { border-color: var(--deep); transform: scale(1.15); }
+  .swatch.active::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  }
+  .color-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .color-custom input[type="color"] {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    padding: 2px;
+    cursor: pointer;
+    background: none;
+  }
+  .color-custom span { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; }
+
+  /* ─── EXTRAS / PRODUCTS ─── */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .product-card {
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--cream);
+    position: relative;
+  }
+  .product-card:hover { border-color: var(--gold); background: var(--gold-light); }
+  .product-card.selected {
+    border-color: var(--rose);
+    background: #FAF0F0;
+  }
+  .product-card input[type="checkbox"] { display: none; }
+  .product-card .p-icon { font-size: 22px; margin-bottom: 8px; }
+  .product-card .p-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--deep);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .product-card .p-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .product-card .check-mark {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    color: var(--white);
+    background: transparent;
+    transition: all 0.2s;
+  }
+  .product-card.selected .check-mark {
+    background: var(--rose);
+    border-color: var(--rose);
+  }
+  .product-card.selected .check-mark::after { content: '✓'; }
+
+  /* ─── DIVIDER ─── */
+  .ornament-divider {
+    text-align: center;
+    margin: 6px 0 20px;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+  }
+
+  /* ─── OBS FIELD ─── */
+  .obs-hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ─── CEP INLINE ─── */
+  .cep-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 12px;
+    align-items: end;
+  }
+  .cep-btn {
+    padding: 10px 14px;
+    background: var(--deep);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+    height: 40px;
+  }
+  .cep-btn:hover { background: var(--rose); }
+  .cep-status { font-size: 11px; margin-top: 4px; }
+  .cep-status.ok { color: #5A9A5A; }
+  .cep-status.err { color: var(--rose); }
+
+  /* ─── SUBMIT ─── */
+  .submit-area {
+    text-align: center;
+    margin-top: 36px;
+  }
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 56px;
+    background: var(--deep);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 2px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 24px rgba(44,26,26,0.2);
+  }
+  .submit-btn:hover {
+    background: var(--rose);
+    color: var(--white);
+    box-shadow: 0 6px 32px rgba(176,112,112,0.35);
+    transform: translateY(-1px);
+  }
+  .submit-btn .btn-ornament { font-size: 1rem; }
+
+  /* ─── SUCCESS MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(44,26,26,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 48px 56px;
+    max-width: 480px;
+    text-align: center;
+    border-radius: 2px;
+    box-shadow: 0 20px 80px rgba(44,26,26,0.3);
+    animation: modalIn 0.4s cubic-bezier(0.2,0.8,0.3,1);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+  }
+  .modal-box .modal-icon { font-size: 36px; margin-bottom: 16px; }
+  .modal-box h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--deep);
+    margin-bottom: 10px;
+  }
+  .modal-box p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+  .modal-close {
+    padding: 10px 32px;
+    background: var(--deep);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .section { padding: 24px 20px; }
+    .field-grid.cols-2, .field-grid.cols-3 { grid-template-columns: 1fr; }
+    .cep-row { grid-template-columns: 1fr; }
+    .submit-btn { padding: 14px 32px; }
+    .modal-box { padding: 36px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-ornament">✦ &nbsp; Ficha de Pedido &nbsp; ✦</div>
+    <h1>Ateliê de<br><em>Bordados & Presentes</em></h1>
+    <div class="header-sub">Preencha com carinho cada detalhe do seu pedido</div>
+  </div>
+
+  <form id="orderForm" novalidate>
+
+    <!-- 1. DADOS DO DESTINATÁRIO -->
+    <div class="section">
+      <div class="section-label">
+        <div class="num">1</div>
+        <h2>Dados do Destinatário <span>Quem receberá o pedido</span></h2>
+      </div>
+      <div class="field-grid cols-2">
+        <div class="field" style="grid-column: 1/-1;">
+          <label>Nome completo do destinatário <span class="req">*</span></label>
+          <input type="text" id="nomeDestinatario" placeholder="Ex.: Maria Aparecida da Silva" required>
+        </div>
+        <div class="field">
+          <label>Telefone / WhatsApp <span class="req">*</span></label>
+          <input type="tel" id="telefone" placeholder="(00) 90000-0000" required>
+        </div>
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" id="email" placeholder="exemplo@email.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ENDEREÇO DE ENTREGA -->
+    <div class="section">
+      <div class="section-label">
+        <div class="num">2</div>
+        <h2>Endereço de Entrega <span>Informe o CEP para preenchimento automático</span></h2>
+      </div>
+      <div class="field-grid">
+        <div class="field">
+          <label>CEP <span class="req">*</span></label>
+          <div class="cep-row">
+            <div>
+              <input type="text" id="cep" placeholder="00000-000" maxlength="9" required>
+              <div class="cep-status" id="cepStatus"></div>
+            </div>
+            <button type="button" class="cep-btn" onclick="buscarCEP()">Buscar CEP</button>
+          </div>
+        </div>
+        <div class="field-grid cols-2">
+          <div class="field">
+            <label>Rua / Logradouro <span class="req">*</span></label>
+            <input type="text" id="rua" placeholder="Nome da rua" required>
+          </div>
+          <div class="field">
+            <label>Número <span class="req">*</span></label>
+            <input type="text" id="numero" placeholder="Ex.: 123" required>
+          </div>
+          <div class="field">
+            <label>Complemento</label>
+            <input type="text" id="complemento" placeholder="Apto, Bloco, Casa...">
+          </div>
+          <div class="field">
+            <label>Bairro <span class="req">*</span></label>
+            <input type="text" id="bairro" placeholder="Bairro" required>
+          </div>
+          <div class="field">
+            <label>Cidade <span class="req">*</span></label>
+            <input type="text" id="cidade" placeholder="Cidade" required>
+          </div>
+          <div class="field">
+            <label>Estado <span class="req">*</span></label>
+            <input type="text" id="estado" placeholder="UF" maxlength="2" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. TOALHA -->
+    <div class="section">
+      <div class="section-label">
+        <div class="num">3</div>
+        <h2>Tipo de Toalha <span>Selecione o material desejado</span></h2>
+      </div>
+      <div class="option-group" id="tipoToalha">
+        <label class="opt-btn" onclick="selectOpt(this,'tipoToalha')">
+          <input type="radio" name="toalha" value="linho"> <span class="dot"></span> Linho
+        </label>
+        <label class="opt-btn" onclick="selectOpt(this,'tipoToalha')">
+          <input type="radio" name="toalha" value="aveludada"> <span class="dot"></span> Aveludada
+        </label>
+        <label class="opt-btn" onclick="selectOpt(this,'tipoToalha')">
+          <input type="radio" name="toalha" value="ambas"> <span class="dot"></span> Ambas
+        </label>
+        <label class="opt-btn" onclick="selectOpt(this,'tipoToalha')">
+          <input type="radio" name="toalha" value="nao-aplicavel"> <span class="dot"></span> Não se aplica
+        </label>
+      </div>
+    </div>
+
+    <!-- 4. BORDADO -->
+    <div class="section">
+      <div class="section-label">
+        <div class="num">4</div>
+        <h2>Personalização do Bordado <span>Nome, modelo e data</span></h2>
+      </div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Nome a ser bordado <span class="req">*</span></label>
+          <input type="text" id="nomeBordado" placeholder="Ex.: Sofia ou Maria & João" required>
+        </div>
+        <div class="field-grid cols-2">
+          <div class="field">
+            <label>Modelo / Estilo do bordado</label>
+            <select id="modeloBordado">
+              <option value="">— Selecione —</option>
+              <option>Clássico Elegant</option>
+              <option>Floral Delicado</option>
+              <option>Script Cursivo</option>
+              <option>Gótico Ornamentado</option>
+              <option>Minimalista</option>
+              <option>Infantil / Fofo</option>
+              <option>Religioso Tradicional</option>
+              <option>Personalizado (descrever)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Data a bordar (opcional)</label>
+            <input type="text" id="dataBordado" placeholder="Ex.: 12/06/2025">
+          </div>
+        </div>
+        <div class="field">
+          <label>Descrição do modelo (caso personalizado)</label>
+          <textarea id="descModeloBordado" placeholder="Descreva o motivo, iniciais, símbolos, brasão familiar, etc."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. COR DOS BORDADOS -->
+    <div class="section">
+      <div class="section-label">
+        <div class="num">5</div>
+        <h2>Cor dos Bordados <span>Escolha a(s) cor(es) preferida(s)</span></h2>
+      </div>
+      <div class="color-swatches" id="colorSwatches">
+        <div class="swatch" style="background:#FFFFFF;border:1.5px solid #DDD0C0;" data-color="Branco" onclick="toggleSwatch(this)" title="Branco"></div>
+        <div class="swatch" style="background:#F5D0D0;" data-color="Rosa Claro" onclick="toggleSwatch(this)" title="Rosa Claro"></div>
+        <div class="swatch" style="background:#D4A0A0;" data-color="Rosa" onclick="toggleSwatch(this)" title="Rosa"></div>
+        <div class="swatch" style="background:#A0415A;" data-color="Bordô" onclick="toggleSwatch(this)" title="Bordô"></div>
+        <div class="swatch" style="background:#C8A96E;" data-color="Dourado" onclick="toggleSwatch(this)" title="Dourado"></div>
+        <div class="swatch" style="background:#C0C0C0;" data-color="Prata" onclick="toggleSwatch(this)" title="Prata"></div>
+        <div class="swatch" style="background:#2C1A1A;" data-color="Preto" onclick="toggleSwatch(this)" title="Preto"></div>
+        <div class="swatch" style="background:#4A7FA5;" data-color="Azul Royal" onclick="toggleSwatch(this)" title="Azul Royal"></div>
+        <div class="swatch" style="background:#A8D8A8;" data-color="Verde Menta" onclick="toggleSwatch(this)" title="Verde Menta"></div>
+        <div class="swatch" style="background:#7B5EA7;" data-color="Lilás" onclick="toggleSwatch(this)" title="Lilás"></div>
+        <div class="swatch" style="background:#E8C56E;" data-color="Amarelo Ouro" onclick="toggleSwatch(this)" title="Amarelo Ouro"></div>
+        <div class="swatch" style="background:#E8A06E;" data-color="Terracota" onclick="toggleSwatch(this)" title="Terracota"></div>
+      </div>
+      <div class="color-custom">
+        <input type="color" id="corCustom" value="#D4A0A0" title="Cor personalizada">
+        <span>Ou escolha uma cor personalizada</span>
+      </div>
+      <div class="field" style="margin-top:12px;">
+        <label>Observação sobre cores</label>
+        <input type="text" id="obsCorBordado" placeholder="Ex.: Dourado e branco, ou combinar com o enxoval azul...">
+      </div>
+    </div>
+
+    <!-- 6. APLICAÇÕES ESPECIAIS -->
+    <div class="section">
+      <div class="section-label">
+        <div class="num">6</div>
+        <h2>Aplicações Especiais <span>Acabamentos e detalhes luxuosos</span></h2>
+      </div>
+      <div class="option-group" id="aplicacoes">
+        <label class="opt-btn" onclick="toggleCheck(this)">
+          <input type="checkbox" name="aplicacoes" value="perolas"> <span class="dot"></span> Pérolas
+        </label>
+        <label class="opt-btn" onclick="toggleCheck(this)">
+          <input type="checkbox" name="aplicacoes" value="pontos_luz"> <span class="dot"></span> Pontos de Luz (strass)
+        </label>
+        <label class="opt-btn" onclick="toggleCheck(this)">
+          <input type="checkbox" name="aplicacoes" value="ambos"> <span class="dot"></span> Pérolas + Pontos de Luz
+        </label>
+        <label class="opt-btn" onclick="toggleCheck(this)">
+          <input type="checkbox" name="aplicacoes" value="nenhum"> <span class="dot"></span> Sem aplicações
+        </label>
+      </div>
+    </div>
+
+    <!-- 7. PRODUTOS E SERVIÇOS -->
+    <div class="section">
+      <div class="section-label">
+        <div class="num">7</div>
+        <h2>Produtos & Serviços <span>Selecione tudo o que desejar</span></h2>
+      </div>
+      <div class="ornament-divider">· · ✦ · ·</div>
+      <div class="product-grid" id="productGrid">
+
+        <label class="product-card" onclick="toggleProduct(this)">
+          <input type="checkbox" name="produtos" value="vela_decorada">
+          <div class="check-mark"></div>
+          <div class="p-icon">🕯️</div>
+          <div class="p-name">Vela Decorada</div>
+          <div class="p-desc">Vela artesanal com decoração personalizada para a ocasião</div>
+        </label>
+
+        <label class="product-card" onclick="toggleProduct(this)">
+          <input type="checkbox" name="produtos" value="caixa_mdf">
+          <div class="check-mark"></div>
+          <div class="p-icon">📦</div>
+          <div class="p-name">Caixa Luxo MDF Bordada</div>
+          <div class="p-desc">Caixa premium em MDF com bordado personalizado</div>
+        </label>
+
+        <label class="product-card" onclick="toggleProduct(this)">
+          <input type="checkbox" name="produtos" value="biblia_infantil">
+          <div class="check-mark"></div>
+          <div class="p-icon">📖</div>
+          <div class="p-name">Bíblia Infantil</div>
+          <div class="p-desc">Bíblia infantil com capa bordada personalizada</div>
+        </label>
+
+        <label class="product-card" onclick="toggleProduct(this)">
+          <input type="checkbox" name="produtos" value="escapulario">
+          <div class="check-mark"></div>
+          <div class="p-icon">🙏</div>
+          <div class="p-name">Escapulário de Porta</div>
+          <div class="p-desc">Escapulário ornamental para porta com bordado devocional</div>
+        </label>
+
+        <label class="product-card" onclick="toggleProduct(this)">
+          <input type="checkbox" name="produtos" value="terco">
+          <div class="check-mark"></div>
+          <div class="p-icon">📿</div>
+          <div class="p-name">Terço</div>
+          <div class="p-desc">Terço artesanal de qualidade com acabamento delicado</div>
+        </label>
+
+        <label class="product-card" onclick="toggleProduct(this)">
+          <input type="checkbox" name="produtos" value="porta_joia">
+          <div class="check-mark"></div>
+          <div class="p-icon">💍</div>
+          <div class="p-name">Porta-Jóia</div>
+          <div class="p-desc">Porta-jóia forrado e personalizado com bordado</div>
+        </label>
+
+        <label class="product-card" onclick="toggleProduct(this)">
+          <input type="checkbox" name="produtos" value="agua_benta">
+          <div class="check-mark"></div>
+          <div class="p-icon">💧</div>
+          <div class="p-name">Frasco de Água Benta</div>
+          <div class="p-desc">Frasco decorativo para água benta com acabamento especial</div>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- 8. OBSERVAÇÕES GERAIS -->
+    <div class="section">
+      <div class="section-label">
+        <div class="num">8</div>
+        <h2>Observações Gerais <span>Informações adicionais do pedido</span></h2>
+      </div>
+      <div class="field">
+        <label>Mensagem / Instruções especiais</label>
+        <textarea id="observacoes" rows="4" placeholder="Descreva aqui qualquer detalhe importante: urgência, referências de cor, estilo específico, mensagem a incluir na embalagem, etc."></textarea>
+        <div class="obs-hint">Quanto mais detalhes, mais próximo do seu sonho ficará o resultado ✦</div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <button type="button" class="submit-btn" onclick="submitOrder()">
+        <span class="btn-ornament">✦</span>
+        Enviar Pedido
+        <span class="btn-ornament">✦</span>
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-box">
+    <div class="modal-icon">🌸</div>
+    <h3>Pedido Recebido!</h3>
+    <p>Obrigada pela sua escolha. Em breve nossa equipe entrará em contato para confirmar todos os detalhes do seu pedido e informar o prazo de confecção.</p>
+    <button class="modal-close" onclick="closeModal()">Fechar</button>
+  </div>
+</div>
+
+<script>
+  // ─── OPTION SELECT (radio-style) ───
+  function selectOpt(el, groupId) {
+    const group = document.getElementById(groupId);
+    if (!group) return;
+    group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // ─── CHECKBOX TOGGLE ───
+  function toggleCheck(el) {
+    el.classList.toggle('selected');
+  }
+
+  // ─── PRODUCT TOGGLE ───
+  function toggleProduct(el) {
+    el.classList.toggle('selected');
+  }
+
+  // ─── COLOR SWATCHES ───
+  function toggleSwatch(el) {
+    el.classList.toggle('active');
+  }
+
+  // ─── CEP MASK ───
+  document.getElementById('cep').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g,'');
+    if (v.length > 5) v = v.slice(0,5) + '-' + v.slice(5,8);
+    this.value = v;
+  });
+
+  // ─── BUSCAR CEP ───
+  async function buscarCEP() {
+    const cep = document.getElementById('cep').value.replace(/\D/g,'');
+    const status = document.getElementById('cepStatus');
+    if (cep.length !== 8) {
+      status.textContent = 'Digite um CEP válido com 8 dígitos.';
+      status.className = 'cep-status err';
+      return;
+    }
+    status.textContent = 'Buscando...';
+    status.className = 'cep-status';
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await res.json();
+      if (data.erro) {
+        status.textContent = 'CEP não encontrado.';
+        status.className = 'cep-status err';
+      } else {
+        document.getElementById('rua').value    = data.logradouro || '';
+        document.getElementById('bairro').value  = data.bairro    || '';
+        document.getElementById('cidade').value  = data.localidade || '';
+        document.getElementById('estado').value  = data.uf        || '';
+        status.textContent = '✓ Endereço encontrado!';
+        status.className = 'cep-status ok';
+        document.getElementById('numero').focus();
+      }
+    } catch {
+      status.textContent = 'Erro ao buscar CEP. Tente novamente.';
+      status.className = 'cep-status err';
+    }
+  }
+
+  // ─── SUBMIT ───
+  function submitOrder() {
+    const required = ['nomeDestinatario','telefone','nomeBordado','cep','rua','numero','bairro','cidade','estado'];
+    let valid = true;
+    required.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) {
+        el.style.borderColor = '#B07070';
+        el.focus();
+        valid = false;
+      } else {
+        el.style.borderColor = '';
+      }
+    });
+    if (!valid) {
+      alert('Por favor, preencha todos os campos obrigatórios (marcados com *).');
+      return;
+    }
+    document.getElementById('successModal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('successModal').classList.remove('show');
+  }
+
+  // ─── PHONE MASK ───
+  document.getElementById('telefone').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g,'');
+    if (v.length > 11) v = v.slice(0,11);
+    if (v.length > 6) v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+    else if (v.length > 2) v = '(' + v.slice(0,2) + ') ' + v.slice(2);
+    else if (v.length > 0) v = '(' + v;
+    this.value = v;
+  });
+</script>
+</body>
+</html>

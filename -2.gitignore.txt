@@ -1,0 +1,26 @@
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (caso use servidor local com npx)
+node_modules/
+package-lock.json
+
+# Python (caso use servidor local com python)
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Ambiente
+.env
+.env.local
